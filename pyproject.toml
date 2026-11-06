@@ -1,0 +1,40 @@
+[project]
+name = "roots-of-ai"
+version = "0.1.0"
+description = ""
+authors = [{name = "Ghas"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+dependencies = [
+    "numpy>=2.5.4",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.4",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 120
+indent-width = 4
+
+[tool.ruff.lint]
+extend-select = [
+    "E",    # pycodestyle (Error)
+    "W",    # pycodestyle (Warning)
+    "F",    # Pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "D",    # pydocstyle
+    "T20",  # flake8-print
+    "S",    # Bandit
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
