@@ -36,6 +36,16 @@ class Perceptron:
         self._weights = np.zeros(in_features, dtype=np.float64)
         self._bias = np.float64(0.0)
 
+    @property
+    def weights(self) -> NDArray[np.float64]:
+        """Perceptron model weights."""
+        return self._weights
+
+    @property
+    def bias(self) -> np.float64:
+        """Perceptron model bias."""
+        return self._bias
+
     def _weighted_sum(self, features: NDArray[np.float64]) -> np.float64:
         """Computes the weighted sum of the input features plus the bias.
 
@@ -75,7 +85,7 @@ class Perceptron:
         y_train: NDArray[np.float64],
         learning_rate: float = 0.5,
         epochs: int = 100,
-        callback: Callable[[int, Self], Any] = _noop_callback,
+        callback: Callable[[int, Self], None] = _noop_callback,
     ) -> Self:
         """Fits the Perceptron model using the convergence rule.
 
