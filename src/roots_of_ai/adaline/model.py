@@ -12,8 +12,9 @@ from numpy.typing import NDArray
 __all__ = ["ADALINE"]
 
 
-def _noop_callback(_epoch: int, _model: Any) -> None:
+def _noop_callback(_epoch: int, _model: Any) -> bool:
     """A no-operation callback function that does nothing."""
+    return False
 
 
 class ADALINE:
@@ -76,7 +77,7 @@ class ADALINE:
         y_train: NDArray[np.float64],
         learning_rate: float = 0.01,
         epochs: int = 100,
-        callback: Callable[[int, Self], Any] = _noop_callback,
+        callback: Callable[[int, Self], bool] = _noop_callback,
     ) -> Self:
         """Fits the ADALINE model using stochastic gradient descent (SGD).
 
@@ -86,6 +87,7 @@ class ADALINE:
             learning_rate: Scaling factor for weight updates.
             epochs: Maximum number of passes over the training dataset.
             callback: Function called at the end of each epoch.
+                      Returns True to stop training early.
 
         Returns:
             Trained ADALINE instance.
@@ -102,10 +104,13 @@ class ADALINE:
                 self._weights += learning_rate * error * features
                 self._bias += learning_rate * error
 
-            callback(epoch, self)
+            early_stop = callback(epoch, self)
 
             # There is no convergence check, as it uses a continuous linear error
             # to minimize a quadratic loss
+
+            if early_stop:  # Stop early if the callback returns True
+                break
 
         return self
 
