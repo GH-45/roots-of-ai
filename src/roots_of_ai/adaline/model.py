@@ -38,6 +38,16 @@ class ADALINE:
         self._weights = np.zeros(in_features, dtype=np.float64)
         self._bias = np.float64(0.0)
 
+    @property
+    def weights(self) -> NDArray[np.float64]:
+        """ADALINE model weights."""
+        return self._weights
+
+    @property
+    def bias(self) -> np.float64:
+        """ADALINE model bias."""
+        return self._bias
+
     def _weighted_sum(self, features: NDArray[np.float64]) -> np.float64:
         """Computes the weighted sum of the input features plus the bias.
 
