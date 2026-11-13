@@ -12,8 +12,9 @@ from numpy.typing import NDArray
 __all__ = ["Perceptron"]
 
 
-def _noop_callback(_epoch: int, _model: Any) -> None:
+def _noop_callback(_epoch: int, _model: Any) -> bool:
     """A no-operation callback function that does nothing."""
+    return False
 
 
 class Perceptron:
@@ -85,7 +86,7 @@ class Perceptron:
         y_train: NDArray[np.float64],
         learning_rate: float = 0.5,
         epochs: int = 100,
-        callback: Callable[[int, Self], None] = _noop_callback,
+        callback: Callable[[int, Self], bool] = _noop_callback,
     ) -> Self:
         """Fits the Perceptron model using the convergence rule.
 
@@ -95,13 +96,12 @@ class Perceptron:
             learning_rate: Scaling factor for weight updates.
             epochs: Maximum number of passes over the training dataset.
             callback: Function called at the end of each epoch.
+                      Returns ``True`` to stop training early.
 
         Returns:
             Trained Perceptron instance.
         """
         for epoch in range(epochs):
-            converged = True
-
             for features, y_true in zip(X_train, y_train):
                 # Predict the output for the current features
                 y_pred = self.predict(features)
@@ -115,12 +115,8 @@ class Perceptron:
                     self._weights += learning_rate * error * features
                     self._bias += learning_rate * error
 
-                    converged = False
-
-            callback(epoch, self)
-
-            if converged:  # Stop early if the model has converged
-                break
+            if callback(epoch, self):
+                break  # Stop early if the callback returns True
 
         return self
 

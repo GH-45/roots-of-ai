@@ -149,9 +149,7 @@ class Sequential(Module):
             self._optimizer.step()
             self._optimizer.zero_grad()
 
-            early_stop = callback(epoch, self)
-
-            if early_stop:
+            if callback(epoch, self):
                 break
 
         return self
